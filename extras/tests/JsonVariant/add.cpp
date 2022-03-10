@@ -43,24 +43,4 @@ TEST_CASE("JsonVariant::add()") {
 
     REQUIRE(var.as<std::string>() == "{\"val\":123}");
   }
-
-  SECTION("add JsonDocument to new variant") {
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-
-    var.add(doc2);
-
-    CHECK(var.as<std::string>() == "[{\"hello\":\"world\"}]");
-    CHECK(var.memoryUsage() == JSON_ARRAY_SIZE(1) + JSON_OBJECT_SIZE(1));
-  }
-
-  SECTION("add JsonDocument* to new variant") {
-    StaticJsonDocument<128> doc2;
-    doc2["hello"] = "world";
-
-    var.add(&doc2);
-
-    CHECK(var.as<std::string>() == "[{\"hello\":\"world\"}]");
-    CHECK(var.memoryUsage() == JSON_ARRAY_SIZE(1));
-  }
 }
