@@ -29,6 +29,8 @@ inline T VariantData::asIntegral() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return convertNumber<T>(_content.asFloat);
+    case VALUE_IS_POINTER:
+      return _content.asPointer->asIntegral<T>();
     default:
       return 0;
   }
@@ -45,6 +47,8 @@ inline bool VariantData::asBoolean() const {
       return _content.asFloat != 0;
     case VALUE_IS_NULL:
       return false;
+    case VALUE_IS_POINTER:
+      return _content.asPointer->asBoolean();
     default:
       return true;
   }
@@ -65,6 +69,8 @@ inline T VariantData::asFloat() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return static_cast<T>(_content.asFloat);
+    case VALUE_IS_POINTER:
+      return _content.asPointer->asFloat<T>();
     default:
       return 0;
   }
@@ -78,6 +84,8 @@ inline String VariantData::asString() const {
     case VALUE_IS_OWNED_STRING:
       return String(_content.asString.data, _content.asString.size,
                     String::Copied);
+    case VALUE_IS_POINTER:
+      return _content.asPointer->asString();
     default:
       return String();
   }
@@ -179,6 +187,15 @@ bool CopyStringStoragePolicy::store(TAdaptedString str, MemoryPool *pool,
   String storedString(copy, str.size(), String::Copied);
   callback(storedString);
   return copy != 0;
+}
+
+inline void VariantRef::link(VariantConstRef target) {
+  if (!_data)
+    return;
+  if (target._data)
+    _data->setPointer(target._data);
+  else
+    _data->setNull();
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

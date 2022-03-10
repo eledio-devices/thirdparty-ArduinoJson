@@ -68,6 +68,10 @@ class VariantData {
       case VALUE_IS_BOOLEAN:
         return visitor.visitBoolean(_content.asBoolean != 0);
 
+      case VALUE_IS_POINTER:
+        ARDUINOJSON_ASSERT(_content.asPointer != 0);
+        return _content.asPointer->accept(visitor);
+
       default:
         return visitor.visitNull();
     }
@@ -84,24 +88,35 @@ class VariantData {
   bool asBoolean() const;
 
   CollectionData *asArray() {
-    return isArray() ? &_content.asCollection : 0;
+    return isArrayStrict() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asArray() const {
+    if (isPointer())
+      return _content.asPointer->asArray();
     return const_cast<VariantData *>(this)->asArray();
   }
 
   CollectionData *asObject() {
-    return isObject() ? &_content.asCollection : 0;
+    return isObjectStrict() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asObject() const {
+    if (isPointer())
+      return _content.asPointer->asObject();
     return const_cast<VariantData *>(this)->asObject();
   }
 
   bool copyFrom(const VariantData &src, MemoryPool *pool);
 
   bool isArray() const {
+    if (isPointer())
+      return _content.asPointer->isArray();
+    else
+      return isArrayStrict();
+  }
+
+  bool isArrayStrict() const {
     return (_flags & VALUE_IS_ARRAY) != 0;
   }
 
@@ -113,8 +128,14 @@ class VariantData {
     return (_flags & COLLECTION_MASK) != 0;
   }
 
+  bool isPointer() const {
+    return type() == VALUE_IS_POINTER;
+  }
+
   template <typename T>
   bool isInteger() const {
+    if (isPointer())
+      return _content.asPointer->isInteger<T>();
     switch (type()) {
       case VALUE_IS_UNSIGNED_INTEGER:
         return canConvertNumber<T>(_content.asUnsignedInteger);
@@ -136,10 +157,18 @@ class VariantData {
   }
 
   bool isObject() const {
+    if (isPointer())
+      return _content.asPointer->isObject();
+    return isObjectStrict();
+  }
+
+  bool isObjectStrict() const {
     return (_flags & VALUE_IS_OBJECT) != 0;
   }
 
   bool isNull() const {
+    if (isPointer())
+      return _content.asPointer->isNull();
     return type() == VALUE_IS_NULL;
   }
 
@@ -148,13 +177,13 @@ class VariantData {
   }
 
   void remove(size_t index) {
-    if (isArray())
+    if (isArrayStrict())
       _content.asCollection.removeElement(index);
   }
 
   template <typename TAdaptedString>
   void remove(TAdaptedString key) {
-    if (isObject())
+    if (isObjectStrict())
       _content.asCollection.removeMember(key);
   }
 
@@ -208,6 +237,12 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
+  void setPointer(const VariantData *p) {
+    ARDUINOJSON_ASSERT(p);
+    setType(VALUE_IS_POINTER);
+    _content.asPointer = p;
+  }
+
   void setString(String s) {
     ARDUINOJSON_ASSERT(s);
     if (s.isLinked())
@@ -246,36 +281,42 @@ class VariantData {
   }
 
   size_t nesting() const {
+    if (isPointer())
+      return _content.asPointer->nesting();
     return isCollection() ? _content.asCollection.nesting() : 0;
   }
 
   size_t size() const {
+    if (isPointer())
+      return _content.asPointer->size();
     return isCollection() ? _content.asCollection.size() : 0;
   }
 
   VariantData *addElement(MemoryPool *pool) {
     if (isNull())
       toArray();
-    if (!isArray())
+    if (!isArrayStrict())
       return 0;
     return _content.asCollection.addElement(pool);
   }
 
   VariantData *getElement(size_t index) const {
-    return isArray() ? _content.asCollection.getElement(index) : 0;
+    const CollectionData *col = asArray();
+    return col ? col->getElement(index) : 0;
   }
 
   VariantData *getOrAddElement(size_t index, MemoryPool *pool) {
     if (isNull())
       toArray();
-    if (!isArray())
+    if (!isArrayStrict())
       return 0;
     return _content.asCollection.getOrAddElement(index, pool);
   }
 
   template <typename TAdaptedString>
   VariantData *getMember(TAdaptedString key) const {
-    return isObject() ? _content.asCollection.getMember(key) : 0;
+    const CollectionData *col = asObject();
+    return col ? col->getMember(key) : 0;
   }
 
   template <typename TAdaptedString, typename TStoragePolicy>
@@ -283,7 +324,7 @@ class VariantData {
                               TStoragePolicy storage_policy) {
     if (isNull())
       toObject();
-    if (!isObject())
+    if (!isObjectStrict())
       return 0;
     return _content.asCollection.getOrAddMember(key, pool, storage_policy);
   }

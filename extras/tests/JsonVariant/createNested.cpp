@@ -19,11 +19,15 @@ TEST_CASE("JsonVariant::createNestedObject()") {
     REQUIRE(obj.isNull() == false);
   }
 
-  SECTION("works on MemberProxy") {
-    JsonObject obj = variant["items"].createNestedObject();
-    obj["value"] = 42;
+  SECTION("does nothing on linked array") {
+    StaticJsonDocument<128> doc2;
+    doc2[0] = 42;
+    variant.link(doc2);
 
-    REQUIRE(variant["items"][0]["value"] == 42);
+    variant.createNestedObject();
+
+    CHECK(variant.size() == 1);
+    CHECK(variant[0] == 42);
   }
 }
 
@@ -38,11 +42,15 @@ TEST_CASE("JsonVariant::createNestedArray()") {
     REQUIRE(arr.isNull() == false);
   }
 
-  SECTION("works on MemberProxy") {
-    JsonArray arr = variant["items"].createNestedArray();
-    arr.add(42);
+  SECTION("does nothing on linked array") {
+    StaticJsonDocument<128> doc2;
+    doc2[0] = 42;
+    variant.link(doc2);
 
-    REQUIRE(variant["items"][0][0] == 42);
+    variant.createNestedArray();
+
+    CHECK(variant.size() == 1);
+    CHECK(variant[0] == 42);
   }
 }
 
@@ -58,11 +66,15 @@ TEST_CASE("JsonVariant::createNestedObject(key)") {
     REQUIRE(variant["weather"]["temp"] == 42);
   }
 
-  SECTION("works on MemberProxy") {
-    JsonObject obj = variant["status"].createNestedObject("weather");
-    obj["temp"] = 42;
+  SECTION("does nothing on linked object") {
+    StaticJsonDocument<128> doc2;
+    doc2["hello"] = "world";
+    variant.link(doc2);
 
-    REQUIRE(variant["status"]["weather"]["temp"] == 42);
+    variant.createNestedObject("weather");
+
+    CHECK(variant.size() == 1);
+    CHECK(variant["hello"] == "world");
   }
 }
 
@@ -77,10 +89,14 @@ TEST_CASE("JsonVariant::createNestedArray(key)") {
     REQUIRE(arr.isNull() == false);
   }
 
-  SECTION("works on MemberProxy") {
-    JsonArray arr = variant["weather"].createNestedArray("temp");
-    arr.add(42);
+  SECTION("does nothing on linked object") {
+    StaticJsonDocument<128> doc2;
+    doc2["hello"] = "world";
+    variant.link(doc2);
 
-    REQUIRE(variant["weather"]["temp"][0] == 42);
+    variant.createNestedArray("items");
+
+    CHECK(variant.size() == 1);
+    CHECK(variant["hello"] == "world");
   }
 }

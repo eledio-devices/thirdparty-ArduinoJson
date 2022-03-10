@@ -155,18 +155,21 @@ TEST_CASE("JsonVariant::set() with not enough memory") {
   }
 }
 
-TEST_CASE("JsonVariant::set(DynamicJsonDocument)") {
-  DynamicJsonDocument doc1(1024);
-  doc1["hello"] = "world";
+TEST_CASE("Copy/link from other document") {
+  StaticJsonDocument<1024> doc1, doc2;
+  JsonVariant variant = doc1.to<JsonVariant>();
 
-  DynamicJsonDocument doc2(1024);
-  JsonVariant v = doc2.to<JsonVariant>();
+  SECTION("JsonVariant::set(JsonDocument&)") {
+    doc2["hello"] = "world";
 
-  // Should copy the doc
-  v.set(doc1);
-  doc1.clear();
+    variant.set(doc2);
 
-  std::string json;
-  serializeJson(doc2, json);
-  REQUIRE(json == "{\"hello\":\"world\"}");
+    CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
+    CHECK(variant.memoryUsage() == JSON_OBJECT_SIZE(1));
+
+    // altering the copied document should change the result
+    doc2["hello"] = "WORLD!";
+
+    CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
+  }
 }

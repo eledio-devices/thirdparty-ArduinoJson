@@ -8,11 +8,12 @@ add_executable(JsonVariantTests
 	clear.cpp
 	compare.cpp
 	containsKey.cpp
-	copy.cpp
 	converters.cpp
+	copy.cpp
 	createNested.cpp
 	is.cpp
 	isnull.cpp
+	link.cpp
 	memoryUsage.cpp
 	misc.cpp
 	nesting.cpp
@@ -20,6 +21,7 @@ add_executable(JsonVariantTests
 	overflow.cpp
 	remove.cpp
 	set.cpp
+	size.cpp
 	subscript.cpp
 	types.cpp
 	unbound.cpp
