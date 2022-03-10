@@ -58,11 +58,6 @@ TEST_CASE("Linked document") {
   doc2["hello"] = "world";
   variant.link(doc2);
 
-  // TODO: move in size.cpp
-  SECTION("size()") {
-    CHECK(variant.size() == 1);
-  }
-
   SECTION("is<T>()") {
     CHECK(variant.is<JsonArrayConst>() == false);
     CHECK(variant.is<JsonObjectConst>() == true);

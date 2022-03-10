@@ -21,6 +21,7 @@ add_executable(JsonVariantTests
 	overflow.cpp
 	remove.cpp
 	set.cpp
+	size.cpp
 	subscript.cpp
 	types.cpp
 	unbound.cpp
