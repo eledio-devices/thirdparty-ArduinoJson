@@ -181,4 +181,9 @@ bool CopyStringStoragePolicy::store(TAdaptedString str, MemoryPool *pool,
   return copy != 0;
 }
 
+inline void VariantRef::link(VariantConstRef var) {
+  if (_data)
+    _data->setPointer(var._data);
+}
+
 }  // namespace ARDUINOJSON_NAMESPACE

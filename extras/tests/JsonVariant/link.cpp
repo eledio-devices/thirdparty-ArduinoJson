@@ -12,7 +12,7 @@ TEST_CASE("JsonVariant::link()") {
   SECTION("JsonVariant::link(JsonDocument&)") {
     doc2["hello"] = "world";
 
-    variant.link(doc2.as<JsonVariant>());
+    variant.link(doc2);
 
     CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
     CHECK(variant.memoryUsage() == 0);

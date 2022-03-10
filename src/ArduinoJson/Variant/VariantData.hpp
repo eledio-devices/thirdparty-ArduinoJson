@@ -212,7 +212,7 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setPointer(VariantData *value) {
+  void setPointer(const VariantData *value) {
     setType(VALUE_IS_POINTER);
     _content.asPointer = value;
   }

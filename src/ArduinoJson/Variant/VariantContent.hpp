@@ -51,7 +51,7 @@ union VariantContent {
   UInt asUnsignedInteger;
   Integer asSignedInteger;
   CollectionData asCollection;
-  class VariantData *asPointer;
+  const class VariantData *asPointer;
   struct {
     const char *data;
     size_t size;
