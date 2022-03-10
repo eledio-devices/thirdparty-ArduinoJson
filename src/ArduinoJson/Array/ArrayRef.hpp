@@ -207,7 +207,7 @@ struct Converter<ArrayRef> {
 
   static bool checkJson(VariantRef src) {
     VariantData* data = getData(src);
-    return data && data->isArray();
+    return data && data->isArrayStrict();
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

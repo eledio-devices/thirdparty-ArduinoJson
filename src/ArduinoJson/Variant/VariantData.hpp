@@ -92,6 +92,9 @@ class VariantData {
   }
 
   const CollectionData *asArray() const {
+    // TODO
+    // if (isPointer())
+    //   return _content.asPointer->asArray();
     return const_cast<VariantData *>(this)->asArray();
   }
 
@@ -108,6 +111,13 @@ class VariantData {
   bool copyFrom(const VariantData &src, MemoryPool *pool);
 
   bool isArray() const {
+    if (isPointer())
+      return _content.asPointer->isArray();
+    else
+      return isArrayStrict();
+  }
+
+  bool isArrayStrict() const {
     return (_flags & VALUE_IS_ARRAY) != 0;
   }
 
