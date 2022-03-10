@@ -51,3 +51,24 @@ TEST_CASE("JsonVariant::link()") {
     CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
   }
 }
+
+TEST_CASE("Linked document") {
+  StaticJsonDocument<1024> doc1, doc2;
+  JsonVariant variant = doc1.to<JsonVariant>();
+  doc2["hello"] = "world";
+  variant.link(doc2);
+
+  // TODO: move in size.cpp
+  SECTION("size()") {
+    CHECK(doc1.size() == 1);
+  }
+
+  SECTION("is<T>()") {
+    CHECK(doc1.is<JsonObject>() == true);
+    CHECK(doc1.is<JsonArray>() == false);
+  }
+
+  SECTION("get member") {
+    CHECK(doc1["hello"].as<std::string>() == "world");
+  }
+}

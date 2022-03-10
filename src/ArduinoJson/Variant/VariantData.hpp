@@ -117,6 +117,10 @@ class VariantData {
     return (_flags & COLLECTION_MASK) != 0;
   }
 
+  bool isPointer() const {
+    return type() == VALUE_IS_POINTER;
+  }
+
   template <typename T>
   bool isInteger() const {
     switch (type()) {
@@ -259,7 +263,9 @@ class VariantData {
   }
 
   size_t size() const {
-    return isCollection() ? _content.asCollection.size() : 0;
+    return isPointer()      ? _content.asPointer->size()
+           : isCollection() ? _content.asCollection.size()
+                            : 0;
   }
 
   VariantData *addElement(MemoryPool *pool) {
