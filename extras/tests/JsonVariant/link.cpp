@@ -51,21 +51,3 @@ TEST_CASE("JsonVariant::link()") {
     CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
   }
 }
-
-TEST_CASE("Linked document") {
-  StaticJsonDocument<1024> doc1, doc2;
-  JsonVariant variant = doc1.to<JsonVariant>();
-  doc2["hello"] = "world";
-  variant.link(doc2);
-
-  SECTION("get member") {
-    CHECK(variant["hello"].as<std::string>() == "world");
-  }
-
-  SECTION("set member") {
-    // The link is read-only; the following line should have no side effect
-    variant["tutu"] = "toto";
-
-    CHECK(doc1.as<std::string>() == "{\"hello\":\"world\"}");
-  }
-}
