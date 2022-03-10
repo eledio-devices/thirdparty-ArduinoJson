@@ -172,18 +172,4 @@ TEST_CASE("Copy/link from other document") {
 
     CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
   }
-
-  SECTION("JsonVariant::set(JsonDocument*)") {
-    doc2["hello"] = "world";
-
-    variant.set(&doc2);
-
-    CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
-    CHECK(variant.memoryUsage() == 0);
-
-    // altering the links document should change the result
-    doc2["hello"] = "WORLD!";
-
-    CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
-  }
 }

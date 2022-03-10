@@ -198,6 +198,11 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename TString>
   FORCE_INLINE VariantRef getOrAddMember(const TString &) const;
 
+  FORCE_INLINE void link(VariantRef var) {
+    if (_data)
+      _data->setPointer(var._data);
+  }
+
   FORCE_INLINE void remove(size_t index) const {
     if (_data)
       _data->remove(index);

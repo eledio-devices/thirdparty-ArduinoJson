@@ -303,9 +303,4 @@ inline bool canConvertFromJson(VariantConstRef src, const std::string_view&) {
 
 #endif
 
-inline void convertToJson(JsonDocument* src, VariantRef dst) {
-  VariantData* data = getData(dst);
-  data->setPointer(getData(src->as<VariantRef>()));
-}
-
 }  // namespace ARDUINOJSON_NAMESPACE
