@@ -88,13 +88,12 @@ class VariantData {
   bool asBoolean() const;
 
   CollectionData *asArray() {
-    return isArray() ? &_content.asCollection : 0;
+    return isArrayStrict() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asArray() const {
-    // TODO
-    // if (isPointer())
-    //   return _content.asPointer->asArray();
+    if (isPointer())
+      return _content.asPointer->asArray();
     return const_cast<VariantData *>(this)->asArray();
   }
 
@@ -302,13 +301,14 @@ class VariantData {
   }
 
   VariantData *getElement(size_t index) const {
-    return isArray() ? _content.asCollection.getElement(index) : 0;
+    const CollectionData *col = asArray();
+    return col ? col->getElement(index) : 0;
   }
 
   VariantData *getOrAddElement(size_t index, MemoryPool *pool) {
     if (isNull())
       toArray();
-    if (!isArray())
+    if (!isArrayStrict())
       return 0;
     return _content.asCollection.getOrAddElement(index, pool);
   }
