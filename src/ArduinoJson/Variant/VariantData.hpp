@@ -100,6 +100,8 @@ class VariantData {
   }
 
   const CollectionData *asObject() const {
+    if (isPointer())
+      return _content.asPointer->asObject();
     return const_cast<VariantData *>(this)->asObject();
   }
 
@@ -144,6 +146,12 @@ class VariantData {
   }
 
   bool isObject() const {
+    if (isPointer())
+      return _content.asPointer->isObject();
+    return isObjectStrict();
+  }
+
+  bool isObjectStrict() const {
     return (_flags & VALUE_IS_OBJECT) != 0;
   }
 
@@ -164,6 +172,13 @@ class VariantData {
   void remove(TAdaptedString key) {
     if (isObject())
       _content.asCollection.removeMember(key);
+  }
+
+  const VariantData *resolve() const {
+    if (isPointer())
+      return _content.asPointer->resolve();
+    else
+      return this;
   }
 
   void setBoolean(bool value) {
@@ -290,7 +305,8 @@ class VariantData {
 
   template <typename TAdaptedString>
   VariantData *getMember(TAdaptedString key) const {
-    return isObject() ? _content.asCollection.getMember(key) : 0;
+    const CollectionData *col = asObject();
+    return col ? col->getMember(key) : 0;
   }
 
   template <typename TAdaptedString, typename TStoragePolicy>

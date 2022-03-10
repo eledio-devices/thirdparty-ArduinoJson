@@ -60,16 +60,16 @@ TEST_CASE("Linked document") {
 
   // TODO: move in size.cpp
   SECTION("size()") {
-    CHECK(doc1.size() == 1);
+    CHECK(variant.size() == 1);
   }
 
   SECTION("is<T>()") {
-    CHECK(doc1.is<JsonArrayConst>() == false);
-    CHECK(doc1.is<JsonObjectConst>() == true);
-    CHECK(doc1.is<JsonObject>() == false);
+    CHECK(variant.is<JsonArrayConst>() == false);
+    CHECK(variant.is<JsonObjectConst>() == true);
+    CHECK(variant.is<JsonObject>() == false);
   }
 
   SECTION("get member") {
-    CHECK(doc1["hello"].as<std::string>() == "world");
+    CHECK(variant["hello"].as<std::string>() == "world");
   }
 }

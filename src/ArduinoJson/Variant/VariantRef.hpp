@@ -52,13 +52,15 @@ class VariantRefBase : public VariantTag {
   VariantRefBase(TData *data) : _data(data) {}
   TData *_data;
 
+  // const TData *getData() const {
+  //   const TData *data = _data;
+  //   if (!_data)
+  //     return 0;
+  //   return _data->resolve();
+  // }
+
   friend TData *getData(const VariantRefBase &variant) {
-    TData *data = variant._data;
-    if (!data)
-      return 0;
-    while (data->isPointer())
-      data = data->asPointer;  // TODO: test multiple levels
-    return data;
+    return variant._data;
   }
 };
 
