@@ -22,4 +22,32 @@ TEST_CASE("JsonVariant::link()") {
 
     CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
   }
+
+  SECTION("JsonVariant::link(MemberProxy)") {
+    doc2["obj"]["hello"] = "world";
+
+    variant.link(doc2["obj"]);
+
+    CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
+    CHECK(variant.memoryUsage() == 0);
+
+    // altering the linked document should change the result
+    doc2["obj"]["hello"] = "WORLD!";
+
+    CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
+  }
+
+  SECTION("JsonVariant::link(ElementProxy)") {
+    doc2[0]["hello"] = "world";
+
+    variant.link(doc2[0]);
+
+    CHECK(variant.as<std::string>() == "{\"hello\":\"world\"}");
+    CHECK(variant.memoryUsage() == 0);
+
+    // altering the linked document should change the result
+    doc2[0]["hello"] = "WORLD!";
+
+    CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
+  }
 }
