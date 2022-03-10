@@ -72,4 +72,11 @@ TEST_CASE("Linked document") {
   SECTION("get member") {
     CHECK(variant["hello"].as<std::string>() == "world");
   }
+
+  SECTION("set member") {
+    // The link is read-only; the following line should have no side effect
+    variant["tutu"] = "toto";
+
+    CHECK(doc1.as<std::string>() == "{\"hello\":\"world\"}");
+  }
 }

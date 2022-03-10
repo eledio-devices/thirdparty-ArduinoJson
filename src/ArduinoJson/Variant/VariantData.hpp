@@ -314,7 +314,7 @@ class VariantData {
                               TStoragePolicy storage_policy) {
     if (isNull())
       toObject();
-    if (!isObject())
+    if (!isObjectStrict())
       return 0;
     return _content.asCollection.getOrAddMember(key, pool, storage_policy);
   }
