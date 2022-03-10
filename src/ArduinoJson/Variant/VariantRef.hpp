@@ -53,7 +53,12 @@ class VariantRefBase : public VariantTag {
   TData *_data;
 
   friend TData *getData(const VariantRefBase &variant) {
-    return variant._data;
+    TData *data = variant._data;
+    if (!data)
+      return 0;
+    while (data->isPointer())
+      data = data->asPointer;  // TODO: test multiple levels
+    return data;
   }
 };
 

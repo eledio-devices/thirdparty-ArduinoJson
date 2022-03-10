@@ -64,8 +64,9 @@ TEST_CASE("Linked document") {
   }
 
   SECTION("is<T>()") {
-    CHECK(doc1.is<JsonObject>() == true);
-    CHECK(doc1.is<JsonArray>() == false);
+    CHECK(doc1.is<JsonArrayConst>() == false);
+    CHECK(doc1.is<JsonObjectConst>() == true);
+    CHECK(doc1.is<JsonObject>() == false);
   }
 
   SECTION("get member") {
