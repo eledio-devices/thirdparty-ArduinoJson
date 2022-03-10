@@ -138,13 +138,12 @@ TEST_CASE("JsonVariant::operator[]") {
     CHECK(var["hello"].as<std::string>() == "world");
   }
 
-  SECTION("try to set value to linked object") {
+  SECTION("set value to linked object") {
     StaticJsonDocument<1024> doc1, doc2;
     doc2["hello"] = "world";
     var.link(doc2);
 
-    // The link is read-only; the following line should have no side effect
-    var["tutu"] = "toto";
+    var["tutu"] = "toto";  // no-op
 
     CHECK(doc.as<std::string>() == "{\"hello\":\"world\"}");
     CHECK(doc2.as<std::string>() == "{\"hello\":\"world\"}");
