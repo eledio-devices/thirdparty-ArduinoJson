@@ -58,12 +58,6 @@ TEST_CASE("Linked document") {
   doc2["hello"] = "world";
   variant.link(doc2);
 
-  SECTION("is<T>()") {
-    CHECK(variant.is<JsonArrayConst>() == false);
-    CHECK(variant.is<JsonObjectConst>() == true);
-    CHECK(variant.is<JsonObject>() == false);
-  }
-
   SECTION("get member") {
     CHECK(variant["hello"].as<std::string>() == "world");
   }
