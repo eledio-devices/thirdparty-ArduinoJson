@@ -221,4 +221,12 @@ TEST_CASE("JsonVariantConst::operator[]") {
     REQUIRE(var.is<JsonObject>() == false);
     REQUIRE(value == 0);
   }
+
+  SECTION("get value from linked object") {
+    StaticJsonDocument<1024> doc1, doc2;
+    doc2["hello"] = "world";
+    var.link(doc2);
+
+    CHECK(cvar["hello"].as<std::string>() == "world");
+  }
 }
