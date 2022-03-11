@@ -349,4 +349,15 @@ TEST_CASE("JsonVariant::as()") {
 
     CHECK(variant.as<std::string>() == "hello");
   }
+
+  SECTION("linked bool") {
+    StaticJsonDocument<128> doc2;
+    variant.link(doc2);
+
+    doc2.set(true);
+    CHECK(variant.as<bool>() == true);
+
+    doc2.set(false);
+    CHECK(variant.as<bool>() == false);
+  }
 }
