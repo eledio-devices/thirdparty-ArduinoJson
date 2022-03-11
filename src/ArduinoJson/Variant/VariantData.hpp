@@ -285,13 +285,15 @@ class VariantData {
   }
 
   size_t nesting() const {
+    if (isPointer())
+      return _content.asPointer->nesting();
     return isCollection() ? _content.asCollection.nesting() : 0;
   }
 
   size_t size() const {
-    return isPointer()      ? _content.asPointer->size()
-           : isCollection() ? _content.asCollection.size()
-                            : 0;
+    if (isPointer())
+      return _content.asPointer->size();
+    return isCollection() ? _content.asCollection.size() : 0;
   }
 
   VariantData *addElement(MemoryPool *pool) {
