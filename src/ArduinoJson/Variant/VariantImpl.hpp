@@ -17,8 +17,6 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename T>
 inline T VariantData::asIntegral() const {
-  if (isPointer())
-    return _content.asPointer->asIntegral<T>();
   switch (type()) {
     case VALUE_IS_BOOLEAN:
       return _content.asBoolean;
@@ -31,6 +29,8 @@ inline T VariantData::asIntegral() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return convertNumber<T>(_content.asFloat);
+    case VALUE_IS_POINTER:
+      return _content.asPointer->asIntegral<T>();
     default:
       return 0;
   }
@@ -67,6 +67,8 @@ inline T VariantData::asFloat() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return static_cast<T>(_content.asFloat);
+    case VALUE_IS_POINTER:
+      return _content.asPointer->asFloat<T>();
     default:
       return 0;
   }
@@ -80,6 +82,8 @@ inline String VariantData::asString() const {
     case VALUE_IS_OWNED_STRING:
       return String(_content.asString.data, _content.asString.size,
                     String::Copied);
+    case VALUE_IS_POINTER:
+      return _content.asPointer->asString();
     default:
       return String();
   }

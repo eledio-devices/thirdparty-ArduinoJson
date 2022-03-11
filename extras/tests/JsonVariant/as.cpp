@@ -330,5 +330,23 @@ TEST_CASE("JsonVariant::as()") {
     variant.link(doc2);
 
     CHECK(variant.as<int>() == 42);
+    CHECK(variant.as<double>() == 42.0);
+  }
+
+  SECTION("linked double") {
+    StaticJsonDocument<128> doc2;
+    doc2.set(42.0);
+    variant.link(doc2);
+
+    CHECK(variant.as<int>() == 42);
+    CHECK(variant.as<double>() == 42.0);
+  }
+
+  SECTION("linked string") {
+    StaticJsonDocument<128> doc2;
+    doc2.set("hello");
+    variant.link(doc2);
+
+    CHECK(variant.as<std::string>() == "hello");
   }
 }
