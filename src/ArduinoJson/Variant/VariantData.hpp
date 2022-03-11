@@ -165,6 +165,8 @@ class VariantData {
   }
 
   bool isNull() const {
+    if (isPointer())
+      return _content.asPointer->isNull();
     return type() == VALUE_IS_NULL;
   }
 
