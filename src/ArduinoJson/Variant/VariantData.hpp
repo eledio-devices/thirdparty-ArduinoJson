@@ -98,7 +98,7 @@ class VariantData {
   }
 
   CollectionData *asObject() {
-    return isObject() ? &_content.asCollection : 0;
+    return isObjectStrict() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asObject() const {
