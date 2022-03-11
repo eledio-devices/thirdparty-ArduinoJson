@@ -323,4 +323,12 @@ TEST_CASE("JsonVariant::as()") {
       CHECK(o.isNull() == true);
     }
   }
+
+  SECTION("linked int") {
+    StaticJsonDocument<128> doc2;
+    doc2.set(42);
+    variant.link(doc2);
+
+    CHECK(variant.as<int>() == 42);
+  }
 }

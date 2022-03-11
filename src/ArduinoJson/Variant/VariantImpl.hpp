@@ -17,6 +17,8 @@ namespace ARDUINOJSON_NAMESPACE {
 
 template <typename T>
 inline T VariantData::asIntegral() const {
+  if (isPointer())
+    return _content.asPointer->asIntegral<T>();
   switch (type()) {
     case VALUE_IS_BOOLEAN:
       return _content.asBoolean;

@@ -134,6 +134,8 @@ class VariantData {
 
   template <typename T>
   bool isInteger() const {
+    if (isPointer())
+      return _content.asPointer->isInteger<T>();
     switch (type()) {
       case VALUE_IS_UNSIGNED_INTEGER:
         return canConvertNumber<T>(_content.asUnsignedInteger);

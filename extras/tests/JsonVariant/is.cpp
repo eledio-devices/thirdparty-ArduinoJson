@@ -199,6 +199,24 @@ TEST_CASE("JsonVariant::is<T>()") {
     CHECK(variant.is<JsonVariant>() == true);
     CHECK(variant.is<JsonVariantConst>() == true);
   }
+
+  SECTION("linked int") {
+    StaticJsonDocument<1024> doc2;
+    doc2.set(42);
+    variant.link(doc2);
+
+    CHECK(variant.is<JsonObjectConst>() == false);
+    CHECK(variant.is<JsonVariantConst>() == true);
+    CHECK(variant.is<JsonObject>() == false);
+    CHECK(variant.is<JsonVariant>() == true);
+    CHECK(variant.is<JsonArray>() == false);
+    CHECK(variant.is<JsonArrayConst>() == false);
+    CHECK(variant.is<int>() == true);
+    CHECK(variant.is<float>() == false);
+    CHECK(variant.is<bool>() == false);
+    CHECK(variant.is<const char *>() == false);
+    CHECK(variant.is<MYENUM2>() == true);
+  }
 }
 
 TEST_CASE("JsonVariantConst::is<T>()") {
@@ -389,5 +407,23 @@ TEST_CASE("JsonVariantConst::is<T>()") {
     CHECK(cvariant.is<bool>() == false);
     CHECK(cvariant.is<const char *>() == false);
     CHECK(cvariant.is<MYENUM2>() == false);
+  }
+
+  SECTION("linked int") {
+    StaticJsonDocument<1024> doc2;
+    doc2.set(42);
+    variant.link(doc2);
+
+    CHECK(cvariant.is<JsonObjectConst>() == false);
+    CHECK(cvariant.is<JsonVariantConst>() == true);
+    CHECK(cvariant.is<JsonObject>() == false);
+    CHECK(cvariant.is<JsonVariant>() == false);
+    CHECK(cvariant.is<JsonArray>() == false);
+    CHECK(cvariant.is<JsonArrayConst>() == false);
+    CHECK(cvariant.is<int>() == true);
+    CHECK(cvariant.is<float>() == false);
+    CHECK(cvariant.is<bool>() == false);
+    CHECK(cvariant.is<const char *>() == false);
+    CHECK(cvariant.is<MYENUM2>() == true);
   }
 }
