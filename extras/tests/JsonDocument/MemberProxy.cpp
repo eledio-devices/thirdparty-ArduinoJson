@@ -245,3 +245,35 @@ TEST_CASE("MemberProxy::operator[]") {
     REQUIRE(doc.as<std::string>() == "{\"hello\":[null,null,42]}");
   }
 }
+
+TEST_CASE("MemberProxy::createNestedArray()") {
+  StaticJsonDocument<1024> doc;
+  JsonArray arr = doc["items"].createNestedArray();
+  arr.add(42);
+
+  CHECK(doc["items"][0][0] == 42);
+}
+
+TEST_CASE("MemberProxy::createNestedArray(key)") {
+  StaticJsonDocument<1024> doc;
+  JsonArray arr = doc["weather"].createNestedArray("temp");
+  arr.add(42);
+
+  CHECK(doc["weather"]["temp"][0] == 42);
+}
+
+TEST_CASE("MemberProxy::createNestedObject()") {
+  StaticJsonDocument<1024> doc;
+  JsonObject obj = doc["items"].createNestedObject();
+  obj["value"] = 42;
+
+  CHECK(doc["items"][0]["value"] == 42);
+}
+
+TEST_CASE("MemberProxy::createNestedObject(key)") {
+  StaticJsonDocument<1024> doc;
+  JsonObject obj = doc["status"].createNestedObject("weather");
+  obj["temp"] = 42;
+
+  CHECK(doc["status"]["weather"]["temp"] == 42);
+}
