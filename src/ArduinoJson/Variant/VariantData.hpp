@@ -177,13 +177,13 @@ class VariantData {
   }
 
   void remove(size_t index) {
-    if (isArray())
+    if (isArrayStrict())
       _content.asCollection.removeElement(index);
   }
 
   template <typename TAdaptedString>
   void remove(TAdaptedString key) {
-    if (isObject())
+    if (isObjectStrict())
       _content.asCollection.removeMember(key);
   }
 
