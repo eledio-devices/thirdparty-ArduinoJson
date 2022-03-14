@@ -50,4 +50,28 @@ TEST_CASE("JsonVariant::link()") {
 
     CHECK(variant.as<std::string>() == "{\"hello\":\"WORLD!\"}");
   }
+
+  SECTION("target is unbound") {
+    JsonVariant unbound;
+    variant["hello"] = "world";
+
+    variant.link(unbound);
+
+    CHECK(variant.isUnbound() == false);
+    CHECK(variant.isNull() == true);
+    CHECK(variant.memoryUsage() == 0);
+    CHECK(variant.size() == 0);
+  }
+
+  SECTION("variant is unbound") {
+    JsonVariant unbound;
+    doc2["hello"] = "world";
+
+    unbound.link(doc2);
+
+    CHECK(unbound.isUnbound() == true);
+    CHECK(unbound.isNull() == true);
+    CHECK(unbound.memoryUsage() == 0);
+    CHECK(unbound.size() == 0);
+  }
 }

@@ -244,9 +244,10 @@ class VariantData {
     setType(VALUE_IS_NULL);
   }
 
-  void setPointer(const VariantData *value) {
+  void setPointer(const VariantData *p) {
+    ARDUINOJSON_ASSERT(p);
     setType(VALUE_IS_POINTER);
-    _content.asPointer = value;
+    _content.asPointer = p;
   }
 
   void setString(String s) {
