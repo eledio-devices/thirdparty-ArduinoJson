@@ -302,7 +302,7 @@ class VariantData {
   VariantData *addElement(MemoryPool *pool) {
     if (isNull())
       toArray();
-    if (!isArray())
+    if (!isArrayStrict())
       return 0;
     return _content.asCollection.addElement(pool);
   }
