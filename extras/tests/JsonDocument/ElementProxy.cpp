@@ -204,3 +204,11 @@ TEST_CASE("ElementProxy::operator[]") {
     REQUIRE(doc.as<std::string>() == "[null,[null,null,42]]");
   }
 }
+
+TEST_CASE("ElementProxy::link()") {
+  StaticJsonDocument<1024> doc1, doc2;
+  doc1[0].link(doc2);
+  doc2["hello"] = "world";
+
+  CHECK(doc1.as<std::string>() == "[{\"hello\":\"world\"}]");
+}
