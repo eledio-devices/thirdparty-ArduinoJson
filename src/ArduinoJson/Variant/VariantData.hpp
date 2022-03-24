@@ -68,7 +68,7 @@ class VariantData {
       case VALUE_IS_BOOLEAN:
         return visitor.visitBoolean(_content.asBoolean != 0);
 
-      case VALUE_IS_POINTER:
+      case VALUE_IS_POINTER:  // P+0 G+46
         ARDUINOJSON_ASSERT(_content.asPointer != 0);
         return _content.asPointer->accept(visitor);
 
@@ -92,7 +92,7 @@ class VariantData {
   }
 
   const CollectionData *asArray() const {
-    if (isPointer())
+    if (isPointer())  // P+14 G+0
       return _content.asPointer->asArray();
     return const_cast<VariantData *>(this)->asArray();
   }
@@ -102,7 +102,7 @@ class VariantData {
   }
 
   const CollectionData *asObject() const {
-    if (isPointer())
+    if (isPointer())  // P+20 G+0
       return _content.asPointer->asObject();
     return const_cast<VariantData *>(this)->asObject();
   }
@@ -110,7 +110,7 @@ class VariantData {
   bool copyFrom(const VariantData &src, MemoryPool *pool);
 
   bool isArray() const {
-    if (isPointer())
+    if (isPointer())  // P+0 G+0
       return _content.asPointer->isArray();
     else
       return isArrayStrict();
@@ -134,7 +134,7 @@ class VariantData {
 
   template <typename T>
   bool isInteger() const {
-    if (isPointer())
+    if (isPointer())  // P+0 G+0
       return _content.asPointer->isInteger<T>();
     switch (type()) {
       case VALUE_IS_UNSIGNED_INTEGER:
@@ -157,7 +157,7 @@ class VariantData {
   }
 
   bool isObject() const {
-    if (isPointer())
+    if (isPointer())  // P+0 G+0
       return _content.asPointer->isObject();
     return isObjectStrict();
   }
@@ -167,7 +167,7 @@ class VariantData {
   }
 
   bool isNull() const {
-    if (isPointer())
+    if (isPointer())  // P+0 G+20
       return _content.asPointer->isNull();
     return type() == VALUE_IS_NULL;
   }
@@ -281,13 +281,13 @@ class VariantData {
   }
 
   size_t nesting() const {
-    if (isPointer())
+    if (isPointer())  // P+0 G+0
       return _content.asPointer->nesting();
     return isCollection() ? _content.asCollection.nesting() : 0;
   }
 
   size_t size() const {
-    if (isPointer())
+    if (isPointer())  // P+0 G+0
       return _content.asPointer->size();
     return isCollection() ? _content.asCollection.size() : 0;
   }
@@ -300,7 +300,7 @@ class VariantData {
     return _content.asCollection.addElement(pool);
   }
 
-  VariantData *getElement(size_t index) const {
+  VariantData *getElement(size_t index) const {  // P+4 G+0
     const CollectionData *col = asArray();
     return col ? col->getElement(index) : 0;
   }
@@ -314,7 +314,7 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  VariantData *getMember(TAdaptedString key) const {
+  VariantData *getMember(TAdaptedString key) const {  // P+4 G+0
     const CollectionData *col = asObject();
     return col ? col->getMember(key) : 0;
   }

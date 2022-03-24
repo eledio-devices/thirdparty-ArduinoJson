@@ -29,7 +29,7 @@ inline T VariantData::asIntegral() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return convertNumber<T>(_content.asFloat);
-    case VALUE_IS_POINTER:
+    case VALUE_IS_POINTER:  // P+28 G+0
       return _content.asPointer->asIntegral<T>();
     default:
       return 0;
@@ -47,7 +47,7 @@ inline bool VariantData::asBoolean() const {
       return _content.asFloat != 0;
     case VALUE_IS_NULL:
       return false;
-    case VALUE_IS_POINTER:
+    case VALUE_IS_POINTER:  // P+0 G+0
       return _content.asPointer->asBoolean();
     default:
       return true;
@@ -69,7 +69,7 @@ inline T VariantData::asFloat() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return static_cast<T>(_content.asFloat);
-    case VALUE_IS_POINTER:
+    case VALUE_IS_POINTER:  // P+34 G+0
       return _content.asPointer->asFloat<T>();
     default:
       return 0;
@@ -84,7 +84,7 @@ inline String VariantData::asString() const {
     case VALUE_IS_OWNED_STRING:
       return String(_content.asString.data, _content.asString.size,
                     String::Copied);
-    case VALUE_IS_POINTER:
+    case VALUE_IS_POINTER:  // P+16 G+0
       return _content.asPointer->asString();
     default:
       return String();
