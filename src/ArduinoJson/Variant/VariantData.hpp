@@ -98,8 +98,6 @@ class VariantData {
   }
 
   const CollectionData *asArray() const {
-    if (isPointer())  // P+14 G+0
-      return _content.asPointer->asArray();
     return const_cast<VariantData *>(this)->asArray();
   }
 
@@ -305,7 +303,7 @@ class VariantData {
   }
 
   VariantData *getElement(size_t index) const {  // P+4 G+0
-    const CollectionData *col = asArray();
+    const CollectionData *col = resolve()->asArray();
     return col ? col->getElement(index) : 0;
   }
 

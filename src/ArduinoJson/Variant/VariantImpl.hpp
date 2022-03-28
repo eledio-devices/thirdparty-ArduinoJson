@@ -127,7 +127,7 @@ VariantRef::to() const {
 }
 
 inline VariantConstRef VariantConstRef::getElement(size_t index) const {
-  return ArrayConstRef(_data != 0 ? _data->asArray() : 0)[index];
+  return ArrayConstRef(_data != 0 ? _data->resolve()->asArray() : 0)[index];
 }
 
 inline VariantRef VariantRef::addElement() const {
