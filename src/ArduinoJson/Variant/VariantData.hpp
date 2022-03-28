@@ -87,6 +87,12 @@ class VariantData {
 
   bool asBoolean() const;
 
+  const VariantData *resolve() const {
+    if (isPointer())
+      return _content.asPointer->resolve();
+    return this;
+  }
+
   CollectionData *asArray() {
     return isArrayStrict() ? &_content.asCollection : 0;
   }

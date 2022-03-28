@@ -103,7 +103,9 @@ struct Converter<T, typename enable_if<is_floating_point<T>::value>::type> {
 
   static T fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->asFloat<T>() : false;
+    if (!data)
+      return 0;
+    return data->resolve()->asFloat<T>();
   }
 
   static bool checkJson(VariantConstRef src) {

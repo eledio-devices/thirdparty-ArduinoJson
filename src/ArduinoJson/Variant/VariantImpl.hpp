@@ -69,8 +69,6 @@ inline T VariantData::asFloat() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return static_cast<T>(_content.asFloat);
-    case VALUE_IS_POINTER:  // P+34 G+0
-      return _content.asPointer->asFloat<T>();
     default:
       return 0;
   }
