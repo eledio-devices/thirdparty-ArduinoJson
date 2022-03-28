@@ -264,7 +264,9 @@ struct Converter<ObjectRef> {
   static ObjectRef fromJson(VariantRef src) {
     VariantData* data = getData(src);
     MemoryPool* pool = getPool(src);
-    return ObjectRef(pool, data != 0 ? data->asObject() : 0);
+    if (!data)
+      return ObjectRef();
+    return ObjectRef(pool, data->asObject());
   }
 
   static InvalidConversion<VariantConstRef, ObjectRef> fromJson(

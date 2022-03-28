@@ -108,8 +108,6 @@ class VariantData {
   }
 
   const CollectionData *asObject() const {
-    if (isPointer())  // P+20 G+0
-      return _content.asPointer->asObject();
     return const_cast<VariantData *>(this)->asObject();
   }
 
@@ -321,7 +319,7 @@ class VariantData {
 
   template <typename TAdaptedString>
   VariantData *getMember(TAdaptedString key) const {  // P+4 G+0
-    const CollectionData *col = asObject();
+    const CollectionData *col = resolve()->asObject();
     return col ? col->getMember(key) : 0;
   }
 

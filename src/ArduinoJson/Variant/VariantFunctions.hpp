@@ -24,7 +24,7 @@ inline const CollectionData *variantAsArray(const VariantData *var) {
 }
 
 inline const CollectionData *variantAsObject(const VariantData *var) {
-  return var != 0 ? var->asObject() : 0;
+  return var != 0 ? var->resolve()->asObject() : 0;
 }
 
 inline CollectionData *variantAsObject(VariantData *var) {
