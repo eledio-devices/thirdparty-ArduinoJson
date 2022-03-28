@@ -251,7 +251,7 @@ struct Converter<ObjectConstRef> {
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->isObject();
+    return data && data->resolve()->isObject();
   }
 };
 
@@ -278,7 +278,7 @@ struct Converter<ObjectRef> {
 
   static bool checkJson(VariantRef src) {
     VariantData* data = getData(src);
-    return data && data->isObjectStrict();
+    return data && data->isObject();
   }
 };
 }  // namespace ARDUINOJSON_NAMESPACE

@@ -102,7 +102,7 @@ class VariantData {
   }
 
   CollectionData *asObject() {
-    return isObjectStrict() ? &_content.asCollection : 0;
+    return isObject() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asObject() const {
@@ -159,12 +159,6 @@ class VariantData {
   }
 
   bool isObject() const {
-    if (isPointer())  // P+0 G+0
-      return _content.asPointer->isObject();
-    return isObjectStrict();
-  }
-
-  bool isObjectStrict() const {
     return (_flags & VALUE_IS_OBJECT) != 0;
   }
 
@@ -185,7 +179,7 @@ class VariantData {
 
   template <typename TAdaptedString>
   void remove(TAdaptedString key) {
-    if (isObjectStrict())
+    if (isObject())
       _content.asCollection.removeMember(key);
   }
 
@@ -326,7 +320,7 @@ class VariantData {
                               TStoragePolicy storage_policy) {
     if (isNull())
       toObject();
-    if (!isObjectStrict())
+    if (!isObject())
       return 0;
     return _content.asCollection.getOrAddMember(key, pool, storage_policy);
   }
