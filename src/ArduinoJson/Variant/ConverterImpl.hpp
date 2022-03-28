@@ -124,7 +124,9 @@ struct Converter<const char*> {
 
   static const char* fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->asString().c_str() : 0;
+    if (!data)
+      return 0;
+    return data->resolve()->asString().c_str();
   }
 
   static bool checkJson(VariantConstRef src) {
@@ -142,7 +144,9 @@ struct Converter<String> {
 
   static String fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->asString() : 0;
+    if (!data)
+      return String();
+    return data->resolve()->asString();
   }
 
   static bool checkJson(VariantConstRef src) {

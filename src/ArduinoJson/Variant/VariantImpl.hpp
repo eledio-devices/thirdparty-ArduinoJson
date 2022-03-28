@@ -80,8 +80,6 @@ inline String VariantData::asString() const {
     case VALUE_IS_OWNED_STRING:
       return String(_content.asString.data, _content.asString.size,
                     String::Copied);
-    case VALUE_IS_POINTER:  // P+16 G+0
-      return _content.asPointer->asString();
     default:
       return String();
   }
