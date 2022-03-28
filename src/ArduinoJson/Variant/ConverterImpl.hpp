@@ -85,7 +85,7 @@ struct Converter<bool> {
 
   static bool fromJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data ? data->asBoolean() : false;
+    return data ? data->resolve()->asBoolean() : false;
   }
 
   static bool checkJson(VariantConstRef src) {

@@ -45,8 +45,6 @@ inline bool VariantData::asBoolean() const {
       return _content.asFloat != 0;
     case VALUE_IS_NULL:
       return false;
-    case VALUE_IS_POINTER:  // P+0 G+0
-      return _content.asPointer->asBoolean();
     default:
       return true;
   }
