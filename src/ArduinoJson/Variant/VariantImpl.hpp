@@ -29,8 +29,6 @@ inline T VariantData::asIntegral() const {
       return parseNumber<T>(_content.asString.data);
     case VALUE_IS_FLOAT:
       return convertNumber<T>(_content.asFloat);
-    case VALUE_IS_POINTER:  // P+28 G+0
-      return _content.asPointer->asIntegral<T>();
     default:
       return 0;
   }
