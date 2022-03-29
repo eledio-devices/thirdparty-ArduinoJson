@@ -48,6 +48,11 @@ class VariantRefBase : public VariantTag {
     return variantSize(_data);
   }
 
+  template <typename TVisitor>
+  typename TVisitor::result_type accept(TVisitor &visitor) const {
+    return variantAccept(_data, visitor);
+  }
+
  protected:
   VariantRefBase(TData *data) : _data(data) {}
   TData *_data;
@@ -150,11 +155,6 @@ class VariantRef : public VariantRefBase<VariantData>,
     return as<T>();
   }
 
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor &visitor) const {
-    return variantAccept(_data, visitor);
-  }
-
   // Change the type of the variant
   //
   // ArrayRef to<ArrayRef>()
@@ -241,11 +241,6 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   VariantConstRef() : base_type(0) {}
   VariantConstRef(const VariantData *data) : base_type(data) {}
   VariantConstRef(VariantRef var) : base_type(var._data) {}
-
-  template <typename TVisitor>
-  typename TVisitor::result_type accept(TVisitor &visitor) const {
-    return variantAccept(_data, visitor);
-  }
 
   template <typename T>
   FORCE_INLINE
