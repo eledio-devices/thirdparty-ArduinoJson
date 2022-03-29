@@ -14,7 +14,7 @@ template <typename TVisitor>
 inline typename TVisitor::result_type variantAccept(const VariantData *var,
                                                     TVisitor &visitor) {
   if (var != 0)
-    return var->accept(visitor);
+    return var->resolve()->accept(visitor);
   else
     return visitor.visitNull();
 }

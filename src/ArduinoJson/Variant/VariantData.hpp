@@ -68,10 +68,6 @@ class VariantData {
       case VALUE_IS_BOOLEAN:
         return visitor.visitBoolean(_content.asBoolean != 0);
 
-      case VALUE_IS_POINTER:  // P+0 G+46
-        ARDUINOJSON_ASSERT(_content.asPointer != 0);
-        return _content.asPointer->accept(visitor);
-
       default:
         return visitor.visitNull();
     }
