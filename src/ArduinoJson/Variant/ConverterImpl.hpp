@@ -199,7 +199,7 @@ struct Converter<decltype(nullptr)> {
   }
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data == 0 || data->isNull();
+    return data == 0 || data->resolve()->isNull();
   }
 };
 

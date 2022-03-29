@@ -103,7 +103,7 @@ NO_INLINE VariantData *variantGetOrAddMember(VariantData *var,
 }
 
 inline bool variantIsNull(const VariantData *var) {
-  return var == 0 || var->isNull();
+  return var == 0 || var->resolve()->isNull();
 }
 
 }  // namespace ARDUINOJSON_NAMESPACE

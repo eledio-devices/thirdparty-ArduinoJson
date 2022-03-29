@@ -163,8 +163,6 @@ class VariantData {
   }
 
   bool isNull() const {
-    if (isPointer())  // P+0 G+20
-      return _content.asPointer->isNull();
     return type() == VALUE_IS_NULL;
   }
 
