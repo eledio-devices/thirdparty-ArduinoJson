@@ -55,7 +55,7 @@ struct Converter<
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->isInteger<T>();
+    return data && data->resolve()->isInteger<T>();
   }
 };
 
@@ -71,7 +71,7 @@ struct Converter<T, typename enable_if<is_enum<T>::value>::type> {
 
   static bool checkJson(VariantConstRef src) {
     const VariantData* data = getData(src);
-    return data && data->isInteger<int>();
+    return data && data->resolve()->isInteger<int>();
   }
 };
 
