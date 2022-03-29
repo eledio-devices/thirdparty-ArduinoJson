@@ -90,7 +90,7 @@ class VariantData {
   }
 
   CollectionData *asArray() {
-    return isArrayStrict() ? &_content.asCollection : 0;
+    return isArray() ? &_content.asCollection : 0;
   }
 
   const CollectionData *asArray() const {
@@ -108,13 +108,6 @@ class VariantData {
   bool copyFrom(const VariantData &src, MemoryPool *pool);
 
   bool isArray() const {
-    if (isPointer())  // P+0 G+0
-      return _content.asPointer->isArray();
-    else
-      return isArrayStrict();
-  }
-
-  bool isArrayStrict() const {
     return (_flags & VALUE_IS_ARRAY) != 0;
   }
 
@@ -167,7 +160,7 @@ class VariantData {
   }
 
   void remove(size_t index) {
-    if (isArrayStrict())
+    if (isArray())
       _content.asCollection.removeElement(index);
   }
 
@@ -285,7 +278,7 @@ class VariantData {
   VariantData *addElement(MemoryPool *pool) {
     if (isNull())
       toArray();
-    if (!isArrayStrict())
+    if (!isArray())
       return 0;
     return _content.asCollection.addElement(pool);
   }
@@ -298,7 +291,7 @@ class VariantData {
   VariantData *getOrAddElement(size_t index, MemoryPool *pool) {
     if (isNull())
       toArray();
-    if (!isArrayStrict())
+    if (!isArray())
       return 0;
     return _content.asCollection.getOrAddElement(index, pool);
   }
