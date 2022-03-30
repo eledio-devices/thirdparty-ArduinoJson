@@ -58,7 +58,7 @@ inline bool variantSetString(VariantData *var, TAdaptedString value,
 }
 
 inline size_t variantSize(const VariantData *var) {
-  return var != 0 ? var->size() : 0;
+  return var != 0 ? var->resolve()->size() : 0;
 }
 
 inline CollectionData *variantToArray(VariantData *var) {

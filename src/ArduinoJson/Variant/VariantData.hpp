@@ -266,8 +266,6 @@ class VariantData {
   }
 
   size_t size() const {
-    if (isPointer())  // P+0 G+0
-      return _content.asPointer->size();
     return isCollection() ? _content.asCollection.size() : 0;
   }
 
