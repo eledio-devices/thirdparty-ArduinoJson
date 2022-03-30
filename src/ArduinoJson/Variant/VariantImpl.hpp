@@ -143,13 +143,16 @@ inline VariantRef VariantRef::getOrAddElement(size_t index) const {
 
 template <typename TChar>
 inline VariantRef VariantRef::getMember(TChar *key) const {
-  return VariantRef(_pool, _data != 0 ? _data->getMember(adaptString(key)) : 0);
+  return VariantRef(  // TODO: this returns a mutable reference to a linked
+                      // object
+      _pool, _data != 0 ? _data->resolve()->getMember(adaptString(key)) : 0);
 }
 
 template <typename TString>
 inline typename enable_if<IsString<TString>::value, VariantRef>::type
 VariantRef::getMember(const TString &key) const {
-  return VariantRef(_pool, _data != 0 ? _data->getMember(adaptString(key)) : 0);
+  return VariantRef(  // TODO: idem
+      _pool, _data != 0 ? _data->resolve()->getMember(adaptString(key)) : 0);
 }
 
 template <typename TChar>

@@ -291,8 +291,8 @@ class VariantData {
   }
 
   template <typename TAdaptedString>
-  VariantData *getMember(TAdaptedString key) const {  // P+4 G+0
-    const CollectionData *col = resolve()->asObject();
+  VariantData *getMember(TAdaptedString key) const {
+    const CollectionData *col = asObject();
     return col ? col->getMember(key) : 0;
   }
 
