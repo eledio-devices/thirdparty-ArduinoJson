@@ -133,7 +133,8 @@ inline VariantRef VariantRef::addElement() const {
 }
 
 inline VariantRef VariantRef::getElement(size_t index) const {
-  return VariantRef(_pool, _data != 0 ? _data->getElement(index) : 0);
+  return VariantRef(_pool,
+                    _data != 0 ? _data->resolve()->getElement(index) : 0);
 }
 
 inline VariantRef VariantRef::getOrAddElement(size_t index) const {

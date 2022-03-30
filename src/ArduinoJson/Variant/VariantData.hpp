@@ -277,8 +277,8 @@ class VariantData {
     return _content.asCollection.addElement(pool);
   }
 
-  VariantData *getElement(size_t index) const {  // P+4 G+0
-    const CollectionData *col = resolve()->asArray();
+  VariantData *getElement(size_t index) const {
+    const CollectionData *col = asArray();
     return col ? col->getElement(index) : 0;
   }
 
