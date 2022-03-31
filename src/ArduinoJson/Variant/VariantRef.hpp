@@ -62,6 +62,8 @@ class VariantRefBase : public VariantTag {
   }
 };
 
+class VariantConstRef;
+
 // A variant that can be a any value serializable to a JSON value.
 //
 // It can be set to:
@@ -174,7 +176,7 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   FORCE_INLINE VariantRef getElement(size_t) const;
 
-  FORCE_INLINE class VariantConstRef getElementConst(size_t) const;
+  FORCE_INLINE VariantConstRef getElementConst(size_t) const;
 
   FORCE_INLINE VariantRef getOrAddElement(size_t) const;
 
@@ -192,13 +194,13 @@ class VariantRef : public VariantRefBase<VariantData>,
   // getMemberConst(const char*) const
   // getMemberConst(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE class VariantConstRef getMemberConst(TChar *) const;
+  FORCE_INLINE VariantConstRef getMemberConst(TChar *) const;
 
   // getMemberConst(const std::string&) const
   // getMemberConst(const String&) const
   template <typename TString>
   FORCE_INLINE
-      typename enable_if<IsString<TString>::value, class VariantConstRef>::type
+      typename enable_if<IsString<TString>::value, VariantConstRef>::type
       getMemberConst(const TString &) const;
 
   // getOrAddMember(char*) const
@@ -212,7 +214,7 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename TString>
   FORCE_INLINE VariantRef getOrAddMember(const TString &) const;
 
-  void link(class VariantConstRef var);
+  void link(VariantConstRef var);
 
   FORCE_INLINE void remove(size_t index) const {
     if (_data)
