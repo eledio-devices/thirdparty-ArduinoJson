@@ -36,7 +36,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
       : _object(src._object), _key(src._key) {}
 
   FORCE_INLINE operator VariantConstRef() const {
-    return getUpstreamMember();
+    return getUpstreamMemberConst();
   }
 
   FORCE_INLINE this_type &operator=(const this_type &src) {
@@ -65,7 +65,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   }
 
   FORCE_INLINE bool isNull() const {
-    return getUpstreamMember().isNull();
+    return getUpstreamMemberConst().isNull();
   }
 
   template <typename T>
@@ -91,20 +91,29 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
 
   template <typename T>
   FORCE_INLINE operator T() const {
-    return getUpstreamMember();
+    return as<T>();
   }
 
-  template <typename TValue>
-  FORCE_INLINE bool is() const {
-    return getUpstreamMember().template is<TValue>();
+  template <typename T>
+  FORCE_INLINE
+      typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
+      is() const {
+    return getUpstreamMember().template is<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE
+      typename enable_if<!ConverterNeedsWriteableRef<T>::value, bool>::type
+      is() const {
+    return getUpstreamMemberConst().template is<T>();
   }
 
   FORCE_INLINE size_t size() const {
-    return getUpstreamMember().size();
+    return getUpstreamMemberConst().size();
   }
 
   FORCE_INLINE size_t memoryUsage() const {
-    return getUpstreamMember().memoryUsage();
+    return getUpstreamMemberConst().memoryUsage();
   }
 
   FORCE_INLINE void remove(size_t index) const {
@@ -189,14 +198,14 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   // getMemberConst(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
-    return getUpstreamMember().getMemberConst(key);
+    return getUpstreamMemberConst().getMemberConst(key);
   }
 
   // getMemberConst(const std::string&) const
   // getMemberConst(const String&) const
   template <typename TString>
   FORCE_INLINE VariantConstRef getMemberConst(const TString &key) const {
-    return getUpstreamMember().getMemberConst(key);
+    return getUpstreamMemberConst().getMemberConst(key);
   }
 
   // getOrAddMember(char*) const
@@ -228,7 +237,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   }
 
   friend void convertToJson(const this_type &src, VariantRef dst) {
-    dst.set(src.getUpstreamMember());
+    dst.set(src.getUpstreamMember());  // TODO: getUpstreamMemberConst ?
   }
 
   TObject _object;

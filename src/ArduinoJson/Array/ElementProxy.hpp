@@ -61,7 +61,7 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   FORCE_INLINE bool isNull() const {
-    return getUpstreamElement().isNull();
+    return getUpstreamElementConst().isNull();
   }
 
   template <typename T>
@@ -87,12 +87,21 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
 
   template <typename T>
   FORCE_INLINE operator T() const {
-    return getUpstreamElement();
+    return as<T>();
   }
 
   template <typename T>
-  FORCE_INLINE bool is() const {
+  FORCE_INLINE
+      typename enable_if<ConverterNeedsWriteableRef<T>::value, bool>::type
+      is() const {
     return getUpstreamElement().template is<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE
+      typename enable_if<!ConverterNeedsWriteableRef<T>::value, bool>::type
+      is() const {
+    return getUpstreamElementConst().template is<T>();
   }
 
   template <typename T>
@@ -127,11 +136,11 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   FORCE_INLINE size_t size() const {
-    return getUpstreamElement().size();
+    return getUpstreamElementConst().size();
   }
 
   FORCE_INLINE size_t memoryUsage() const {
-    return getUpstreamElement().memoryUsage();
+    return getUpstreamElementConst().memoryUsage();
   }
 
   template <typename TNestedKey>
@@ -213,7 +222,7 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   friend void convertToJson(const this_type& src, VariantRef dst) {
-    dst.set(src.getUpstreamElement());
+    dst.set(src.getUpstreamElement());  // TODO: getUpstreamElementConst ?
   }
 
   TArray _array;
