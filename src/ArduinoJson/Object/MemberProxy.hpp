@@ -6,6 +6,7 @@
 
 #include <ArduinoJson/Configuration.hpp>
 #include <ArduinoJson/Polyfills/type_traits.hpp>
+#include <ArduinoJson/Variant/Converter.hpp>
 #include <ArduinoJson/Variant/VariantOperators.hpp>
 #include <ArduinoJson/Variant/VariantRef.hpp>
 #include <ArduinoJson/Variant/VariantShortcuts.hpp>
@@ -68,8 +69,16 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, char *>::value, T>::type as()
-      const {
+  FORCE_INLINE typename enable_if<!is_same<T, char *>::value &&
+                                      !ConverterNeedsWriteableRef<T>::value,
+                                  T>::type
+  as() const {
+    return getUpstreamMemberConst().template as<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
+  as() const {
     return getUpstreamMember().template as<T>();
   }
 
@@ -141,7 +150,7 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
 
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor &visitor) const {
-    return getUpstreamMember().accept(visitor);
+    return getUpstreamMemberConst().accept(visitor);
   }
 
   FORCE_INLINE VariantRef addElement() const {
@@ -150,6 +159,10 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
 
   FORCE_INLINE VariantRef getElement(size_t index) const {
     return getUpstreamMember().getElement(index);
+  }
+
+  FORCE_INLINE VariantConstRef getElementConst(size_t index) const {
+    return getUpstreamMemberConst().getElementConst(index);
   }
 
   FORCE_INLINE VariantRef getOrAddElement(size_t index) const {
@@ -171,6 +184,21 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
     return getUpstreamMember().getMember(key);
   }
 
+  // getMemberConst(char*) const
+  // getMemberConst(const char*) const
+  // getMemberConst(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
+    return getUpstreamMember().getMemberConst(key);
+  }
+
+  // getMemberConst(const std::string&) const
+  // getMemberConst(const String&) const
+  template <typename TString>
+  FORCE_INLINE VariantConstRef getMemberConst(const TString &key) const {
+    return getUpstreamMember().getMemberConst(key);
+  }
+
   // getOrAddMember(char*) const
   // getOrAddMember(const char*) const
   // getOrAddMember(const __FlashStringHelper*) const
@@ -189,6 +217,10 @@ class MemberProxy : public VariantOperators<MemberProxy<TObject, TStringRef> >,
  private:
   FORCE_INLINE VariantRef getUpstreamMember() const {
     return _object.getMember(_key);
+  }
+
+  FORCE_INLINE VariantConstRef getUpstreamMemberConst() const {
+    return _object.getMemberConst(_key);
   }
 
   FORCE_INLINE VariantRef getOrAddUpstreamMember() const {

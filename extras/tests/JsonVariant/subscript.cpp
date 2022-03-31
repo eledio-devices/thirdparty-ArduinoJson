@@ -154,7 +154,8 @@ TEST_CASE("JsonVariant::operator[]") {
     doc2.add(42);
     var.link(doc2);
 
-    CHECK(var[0].as<int>() == 42);
+    bool ok = var[0].as<int>() == 42;
+    CHECK(ok);
   }
 
   SECTION("set value to linked array") {

@@ -65,8 +65,16 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   template <typename T>
-  FORCE_INLINE typename enable_if<!is_same<T, char*>::value, T>::type as()
-      const {
+  FORCE_INLINE typename enable_if<!is_same<T, char*>::value &&
+                                      !ConverterNeedsWriteableRef<T>::value,
+                                  T>::type
+  as() const {
+    return getUpstreamElementConst().template as<T>();
+  }
+
+  template <typename T>
+  FORCE_INLINE typename enable_if<ConverterNeedsWriteableRef<T>::value, T>::type
+  as() const {
     return getUpstreamElement().template as<T>();
   }
 
@@ -115,7 +123,7 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
 
   template <typename TVisitor>
   typename TVisitor::result_type accept(TVisitor& visitor) const {
-    return getUpstreamElement().accept(visitor);
+    return getUpstreamElementConst().accept(visitor);
   }
 
   FORCE_INLINE size_t size() const {
@@ -137,6 +145,16 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
   }
 
   template <typename TNestedKey>
+  VariantConstRef getMemberConst(TNestedKey* key) const {
+    return getUpstreamElementConst().getMemberConst(key);
+  }
+
+  template <typename TNestedKey>
+  VariantConstRef getMemberConst(const TNestedKey& key) const {
+    return getUpstreamElementConst().getMemberConst(key);
+  }
+
+  template <typename TNestedKey>
   VariantRef getOrAddMember(TNestedKey* key) const {
     return getOrAddUpstreamElement().getOrAddMember(key);
   }
@@ -152,6 +170,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
 
   VariantRef getElement(size_t index) const {
     return getOrAddUpstreamElement().getElement(index);
+  }
+
+  VariantConstRef getElementConst(size_t index) const {
+    return getUpstreamElementConst().getElementConst(index);
   }
 
   VariantRef getOrAddElement(size_t index) const {
@@ -180,6 +202,10 @@ class ElementProxy : public VariantOperators<ElementProxy<TArray> >,
  private:
   FORCE_INLINE VariantRef getUpstreamElement() const {
     return _array.getElement(_index);
+  }
+
+  FORCE_INLINE VariantConstRef getUpstreamElementConst() const {
+    return _array.getElementConst(_index);
   }
 
   FORCE_INLINE VariantRef getOrAddUpstreamElement() const {

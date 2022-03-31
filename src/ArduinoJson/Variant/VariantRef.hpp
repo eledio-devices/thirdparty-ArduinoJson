@@ -174,6 +174,8 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   FORCE_INLINE VariantRef getElement(size_t) const;
 
+  FORCE_INLINE class VariantConstRef getElementConst(size_t) const;
+
   FORCE_INLINE VariantRef getOrAddElement(size_t) const;
 
   // getMember(const char*) const
@@ -186,6 +188,18 @@ class VariantRef : public VariantRefBase<VariantData>,
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
   getMember(const TString &) const;
+
+  // getMemberConst(const char*) const
+  // getMemberConst(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE class VariantConstRef getMemberConst(TChar *) const;
+
+  // getMemberConst(const std::string&) const
+  // getMemberConst(const String&) const
+  template <typename TString>
+  FORCE_INLINE
+      typename enable_if<IsString<TString>::value, class VariantConstRef>::type
+      getMemberConst(const TString &) const;
 
   // getOrAddMember(char*) const
   // getOrAddMember(const char*) const
@@ -293,25 +307,25 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
     return as<T>();
   }
 
-  FORCE_INLINE VariantConstRef getElement(size_t) const;
+  FORCE_INLINE VariantConstRef getElementConst(size_t) const;
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return getElement(index);
+    return getElementConst(index);
   }
 
-  // getMember(const std::string&) const
-  // getMember(const String&) const
+  // getMemberConst(const std::string&) const
+  // getMemberConst(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantConstRef getMember(const TString &key) const {
+  FORCE_INLINE VariantConstRef getMemberConst(const TString &key) const {
     return VariantConstRef(
         objectGetMember(variantAsObject(_data), adaptString(key)));
   }
 
-  // getMember(char*) const
-  // getMember(const char*) const
-  // getMember(const __FlashStringHelper*) const
+  // getMemberConst(char*) const
+  // getMemberConst(const char*) const
+  // getMemberConst(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantConstRef getMember(TChar *key) const {
+  FORCE_INLINE VariantConstRef getMemberConst(TChar *key) const {
     const CollectionData *obj = variantAsObject(_data);
     return VariantConstRef(obj ? obj->getMember(adaptString(key)) : 0);
   }
@@ -332,7 +346,7 @@ class VariantConstRef : public VariantRefBase<const VariantData>,
   FORCE_INLINE
       typename enable_if<IsString<TChar *>::value, VariantConstRef>::type
       operator[](TChar *key) const {
-    return getMember(key);
+    return getMemberConst(key);
   }
 };
 
