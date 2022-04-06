@@ -116,6 +116,14 @@ struct FloatTraits<T, 8 /*64bits*/> {
     return forge(0x7FEFFFFF, 0xFFFFFFFF);
   }
 
+  static T highest_for(int64_t) {
+    return forge(0x43DFFFFF, 0xFFFFFFFF);  //  9.2233720368547748e+18
+  }
+
+  static T highest_for(uint64_t) {
+    return forge(0x43EFFFFF, 0xFFFFFFFF);  //  1.8446744073709549568e+19
+  }
+
   static T lowest() {
     return forge(0xFFEFFFFF, 0xFFFFFFFF);
   }
@@ -210,6 +218,22 @@ struct FloatTraits<T, 4 /*32bits*/> {
 
   static T highest() {
     return forge(0x7f7fffff);
+  }
+
+  static T highest_for(int32_t) {
+    return forge(0x4EFFFFFF);  // 2.14748352E9
+  }
+
+  static T highest_for(uint32_t) {
+    return forge(0x4F7FFFFF);  // 4.29496704E9
+  }
+
+  static T highest_for(int64_t) {
+    return forge(0x5EFFFFFF);  // 9.22337148709896192E18
+  }
+
+  static T highest_for(uint64_t) {
+    return forge(0x5F7FFFFF);  // 1.844674297419792384E19
   }
 
   static T lowest() {

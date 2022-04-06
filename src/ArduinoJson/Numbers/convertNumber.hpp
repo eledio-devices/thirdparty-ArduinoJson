@@ -109,68 +109,20 @@ canConvertNumber(TIn value) {
 }
 
 // float32 -> int32
-template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TIn>::value && sizeof(TIn) == 4 &&
-                       is_integral<TOut>::value && is_signed<TOut>::value &&
-                       sizeof(TOut) == 4,
-                   bool>::type
-canConvertNumber(TIn value) {
-  return value >= numeric_limits<TOut>::lowest() && value <= 2.14748352e+9f;
-}
-
 // float32 -> uint32
-template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TIn>::value && sizeof(TIn) == 4 &&
-                       is_integral<TOut>::value && is_unsigned<TOut>::value &&
-                       sizeof(TOut) == 4,
-                   bool>::type
-canConvertNumber(TIn value) {
-  return value >= numeric_limits<TOut>::lowest() && value <= 4.29496704e+9f;
-}
-
 // float32 -> int64
-template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TIn>::value && sizeof(TIn) == 4 &&
-                       is_integral<TOut>::value && is_signed<TOut>::value &&
-                       sizeof(TOut) == 8,
-                   bool>::type
-canConvertNumber(TIn value) {
-  return value >= numeric_limits<TOut>::lowest() && value <= 9.22337149e+18f;
-}
-
 // float32 -> uint64
-template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TIn>::value && sizeof(TIn) == 4 &&
-                       is_integral<TOut>::value && is_unsigned<TOut>::value &&
-                       sizeof(TOut) == 8,
-                   bool>::type
-canConvertNumber(TIn value) {
-  return value >= numeric_limits<TOut>::lowest() &&
-         value <= 1.844674297419792384e+19f;
-}
-
 // float64 -> int64
-template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TIn>::value && sizeof(TIn) == 8 &&
-                       is_integral<TOut>::value && is_signed<TOut>::value &&
-                       sizeof(TOut) == 8,
-                   bool>::type
-canConvertNumber(TIn value) {
-  return value >= numeric_limits<TOut>::lowest() &&
-         value <= FloatTraits<TIn>::forge(
-                      0x43DFFFFF, 0xFFFFFFFF);  //  9.2233720368547748e+18
-}
-
 // float64 -> uint64
 template <typename TOut, typename TIn>
-typename enable_if<is_floating_point<TIn>::value && sizeof(TIn) == 8 &&
-                       is_integral<TOut>::value && is_unsigned<TOut>::value &&
-                       sizeof(TOut) == 8,
+typename enable_if<is_floating_point<TIn>::value && is_integral<TOut>::value &&
+                       sizeof(TOut) >= sizeof(TIn),
                    bool>::type
 canConvertNumber(TIn value) {
+  // Avoid error "9.22337e+18 is outside the range of representable values of
+  // type 'long'"
   return value >= numeric_limits<TOut>::lowest() &&
-         value <= FloatTraits<TIn>::forge(
-                      0x43EFFFFF, 0xFFFFFFFF);  //  1.8446744073709549568e+19
+         value <= FloatTraits<TIn>::highest_for(TOut());
 }
 
 template <typename TOut, typename TIn>
