@@ -117,19 +117,19 @@ struct FloatTraits<T, 8 /*64bits*/> {
     return forge(0x7FEFFFFF, 0xFFFFFFFF);
   }
 
-  template <typename TOut>
-  static typename enable_if<is_integral<TOut>::value &&
-                                is_signed<TOut>::value && sizeof(TOut) == 8,
-                            T>::type  // TOut == int64_t
-  highest_for() {
+  template <typename TOut>  // int64_t
+  static T highest_for(
+      typename enable_if<is_integral<TOut>::value && is_signed<TOut>::value &&
+                             sizeof(TOut) == 8,
+                         signed>::type* = 0) {
     return forge(0x43DFFFFF, 0xFFFFFFFF);  //  9.2233720368547748e+18
   }
 
-  template <typename TOut>
-  static typename enable_if<is_integral<TOut>::value &&
-                                is_unsigned<TOut>::value && sizeof(TOut) == 8,
-                            T>::type  // TOut == uint64_t
-  highest_for() {
+  template <typename TOut>  // uint64_t
+  static T highest_for(
+      typename enable_if<is_integral<TOut>::value && is_unsigned<TOut>::value &&
+                             sizeof(TOut) == 8,
+                         unsigned>::type* = 0) {
     return forge(0x43EFFFFF, 0xFFFFFFFF);  //  1.8446744073709549568e+19
   }
 
@@ -229,35 +229,35 @@ struct FloatTraits<T, 4 /*32bits*/> {
     return forge(0x7f7fffff);
   }
 
-  template <typename TOut>
-  static typename enable_if<is_integral<TOut>::value &&
-                                is_signed<TOut>::value && sizeof(TOut) == 4,
-                            T>::type  // TOut == int32_t
-  highest_for() {
+  template <typename TOut>  // int32_t
+  static T highest_for(
+      typename enable_if<is_integral<TOut>::value && is_signed<TOut>::value &&
+                             sizeof(TOut) == 4,
+                         signed>::type* = 0) {
     return forge(0x4EFFFFFF);  // 2.14748352E9
   }
 
-  template <typename TOut>
-  static typename enable_if<is_integral<TOut>::value &&
-                                is_unsigned<TOut>::value && sizeof(TOut) == 4,
-                            T>::type  // TOut == uint32_t
-  highest_for() {
+  template <typename TOut>  // uint32_t
+  static T highest_for(
+      typename enable_if<is_integral<TOut>::value && is_unsigned<TOut>::value &&
+                             sizeof(TOut) == 4,
+                         unsigned>::type* = 0) {
     return forge(0x4F7FFFFF);  // 4.29496704E9
   }
 
-  template <typename TOut>
-  static typename enable_if<is_integral<TOut>::value &&
-                                is_signed<TOut>::value && sizeof(TOut) == 8,
-                            T>::type  // TOut == int64_t
-  highest_for() {
+  template <typename TOut>  // int64_t
+  static T highest_for(
+      typename enable_if<is_integral<TOut>::value && is_signed<TOut>::value &&
+                             sizeof(TOut) == 8,
+                         signed>::type* = 0) {
     return forge(0x5EFFFFFF);  // 9.22337148709896192E18
   }
 
-  template <typename TOut>
-  static typename enable_if<is_integral<TOut>::value &&
-                                is_unsigned<TOut>::value && sizeof(TOut) == 8,
-                            T>::type  // TOut == uint64_t
-  highest_for() {
+  template <typename TOut>  // uint64_t
+  static T highest_for(
+      typename enable_if<is_integral<TOut>::value && is_unsigned<TOut>::value &&
+                             sizeof(TOut) == 8,
+                         unsigned>::type* = 0) {
     return forge(0x5F7FFFFF);  // 1.844674297419792384E19
   }
 
