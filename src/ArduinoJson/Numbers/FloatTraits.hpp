@@ -118,15 +118,6 @@ struct FloatTraits<T, 8 /*64bits*/> {
   }
 
   template <typename TOut>
-  static
-      typename enable_if<is_integral<TOut>::value && sizeof(TOut) < sizeof(T),
-                         T>::type
-      highest_for() {
-    // This conversion is safe because the destination type is smaller
-    return highest();
-  }
-
-  template <typename TOut>
   static typename enable_if<is_integral<TOut>::value &&
                                 is_signed<TOut>::value && sizeof(TOut) == 8,
                             T>::type  // TOut == int64_t
@@ -236,15 +227,6 @@ struct FloatTraits<T, 4 /*32bits*/> {
 
   static T highest() {
     return forge(0x7f7fffff);
-  }
-
-  template <typename TOut>
-  static
-      typename enable_if<is_integral<TOut>::value && sizeof(TOut) < sizeof(T),
-                         T>::type
-      highest_for() {
-    // This conversion is safe because the destination type is smaller
-    return highest();
   }
 
   template <typename TOut>
