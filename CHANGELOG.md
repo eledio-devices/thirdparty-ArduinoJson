@@ -1,6 +1,20 @@
 ArduinoJson: change log
 =======================
 
+v6.21.5 (2024-01-10)
+-------
+
+* Fix warning `function returns incomplete class type` on IAR (issue #2001)
+* Fix `volatile bool` serialized as `1` or `0` instead of `true` or `false` (issue #2029)
+* Remove unused files in the PlatformIO package
+
+v6.21.4 (2023-12-07)
+-------
+
+* Fix error `'std::string' has not been declared` (issue #1967)
+* Fix error `'std::string_view' has not been declared` (issue #1967)
+* Fix error `no instance of overloaded function...` on recent IAR compilers (issue #2001)
+
 v6.21.3 (2023-07-23)
 -------
 
